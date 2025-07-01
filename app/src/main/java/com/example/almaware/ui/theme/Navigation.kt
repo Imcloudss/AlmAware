@@ -26,6 +26,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.almaware.ui.screens.auth.AuthenticationScreen
 import com.example.almaware.ui.screens.splash.SplashScreen
 import kotlinx.serialization.Serializable
 
@@ -36,7 +37,7 @@ import kotlinx.serialization.Serializable
 
 sealed interface AlmAwareRoute {
     @Serializable data object Splash : AlmAwareRoute
-    @Serializable data object Login : AlmAwareRoute
+    @Serializable data object Authentication : AlmAwareRoute
 }
 
 // ========================================================================================
@@ -53,16 +54,16 @@ fun AlmAwareNavGraph(navController: NavHostController) {
         composable<AlmAwareRoute.Splash> {
             SplashScreen(
                 onSplashFinished = {
-                    navController.navigate(AlmAwareRoute.Login) {
+                    navController.navigate(AlmAwareRoute.Authentication) {
                         popUpTo(AlmAwareRoute.Splash) { inclusive = true }
                     }
                 }
             )
         }
 
-        // Login Screen
-        composable<AlmAwareRoute.Login> {
-
+        // Authentication Screen
+        composable<AlmAwareRoute.Authentication> {
+            AuthenticationScreen()
         }
 
         // Main App Screens
@@ -107,7 +108,7 @@ fun AlmAwareNavGraph(navController: NavHostController) {
             unselectedIcon = Icons.Outlined.Home
         ),
         BottomNavItem(
-            route = AlmAwareRoute.Login,
+            route = AlmAwareRoute.Authentication,
             title = "Login",
             selectedIcon = Icons.Filled.Add,
             unselectedIcon = Icons.Outlined.Add
