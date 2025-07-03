@@ -21,7 +21,7 @@ import com.example.almaware.ui.theme.AlmAwareRoute
 
 @Composable
 fun AuthenticationScreen(
-    navController: NavHostController,
+    navController: NavHostController
 ) {
     Column(
         modifier = Modifier.fillMaxSize()

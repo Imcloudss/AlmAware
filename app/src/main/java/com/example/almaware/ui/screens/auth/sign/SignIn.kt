@@ -41,7 +41,6 @@ import com.example.almaware.ui.theme.AlmAwareRoute
 @Composable
 fun SignInScreen(
     navController: NavHostController,
-    onSignInClick: () -> Unit = {} // Passare alla schermata di Sign In
 ) {
     Box(
         modifier = Modifier
@@ -168,7 +167,10 @@ fun SignInScreen(
             Spacer(modifier = Modifier.fillMaxHeight(0.11f))
 
             Button(
-                onClick = onSignInClick,
+                onClick = {
+                    // Fare controllo una volta che si ha anche il db
+                    navController.navigate(AlmAwareRoute.Home)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)

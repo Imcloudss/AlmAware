@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.almaware.ui.screens.auth.AuthenticationScreen
 import com.example.almaware.ui.screens.auth.sign.SignInScreen
 import com.example.almaware.ui.screens.auth.sign.SignUpScreen
+import com.example.almaware.ui.screens.home.HomeScreen
 import com.example.almaware.ui.screens.splash.SplashScreen
 import kotlinx.serialization.Serializable
 
@@ -42,6 +43,7 @@ sealed interface AlmAwareRoute {
     @Serializable data object Authentication : AlmAwareRoute
     @Serializable data object SignIn : AlmAwareRoute
     @Serializable data object SignUp : AlmAwareRoute
+    @Serializable data object Home : AlmAwareRoute
 }
 
 // ========================================================================================
@@ -65,25 +67,21 @@ fun AlmAwareNavGraph(navController: NavHostController) {
             )
         }
 
-        // Authentication Screen
+        // Authentication Screens
         composable<AlmAwareRoute.Authentication> {
             AuthenticationScreen(navController)
         }
-
-        // Sign Up Screen
         composable<AlmAwareRoute.SignUp> {
             SignUpScreen(navController)
         }
-
-        // Sign In Screen
         composable<AlmAwareRoute.SignIn> {
             SignInScreen(navController)
         }
 
         // Main App Screens
-//        composable<AlmAwareRoute.Home> {
-//            HomeScreen(navController)
-//        }
+        composable<AlmAwareRoute.Home> {
+            HomeScreen(navController)
+        }
 //        composable<AlmAwareRoute.Add> {
 //            AddTransactionScreen(navController)
 //        }

@@ -47,7 +47,6 @@ import com.example.almaware.ui.theme.AlmAwareRoute
 @Composable
 fun SignUpScreen(
     navController: NavHostController,
-    onSignUpClick: () -> Unit = {}, // Aggiungere al db i dati del nuovo account
 ) {
     var acceptPolicies by remember { mutableStateOf(false) }
 
@@ -278,7 +277,10 @@ fun SignUpScreen(
             Spacer(modifier = Modifier.fillMaxHeight(0.11f))
 
             Button(
-                onClick = onSignUpClick,
+                onClick = {
+                    // Fare controllo una volta che si ha anche il db
+                    navController.navigate(AlmAwareRoute.Home)
+                          },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
