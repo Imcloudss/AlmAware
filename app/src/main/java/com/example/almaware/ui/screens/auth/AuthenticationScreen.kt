@@ -15,12 +15,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.almaware.R
+import com.example.almaware.ui.theme.AlmAwareRoute
 
 @Composable
 fun AuthenticationScreen(
-    onSignInClick: () -> Unit = {},
-    onSignUpClick: () -> Unit = {}
+    navController: NavHostController,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -96,7 +97,7 @@ fun AuthenticationScreen(
                 Spacer(modifier = Modifier.fillMaxHeight(0.15f))
 
                 Button(
-                    onClick = onSignInClick,
+                    onClick = { navController.navigate(AlmAwareRoute.SignIn) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp),
@@ -116,7 +117,9 @@ fun AuthenticationScreen(
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
 
                 OutlinedButton(
-                    onClick = onSignUpClick,
+                    onClick = {
+                        navController.navigate(AlmAwareRoute.SignUp)
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
