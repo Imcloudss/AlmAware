@@ -212,7 +212,6 @@ fun SignInScreen(
                 fontWeight = FontWeight.Medium,
                 color = Color.Gray,
             )
-
         }
     }
 }

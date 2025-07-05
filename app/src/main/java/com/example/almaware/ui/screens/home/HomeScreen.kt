@@ -21,7 +21,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -33,13 +32,15 @@ import com.example.almaware.ui.composables.BottomNavigationBar
 import com.example.almaware.ui.screens.home.data.backgrounds
 import com.example.almaware.ui.screens.home.data.borderColors
 import com.example.almaware.ui.screens.home.data.cardOverlays
+import kotlinx.serialization.Serializable
 
 // Data class per le card
+@Serializable
 data class HomeCard(
     val id: Int,
     val backgroundRes: Int,
     val overlayRes: Int,
-    val borderColor: Color,
+    val borderColor: Long,
     val route: String,
 )
 
@@ -78,7 +79,7 @@ fun HomeScreen(
             items(items) { item ->
                 CardItem(
                     item,
-                    onClick = { }
+                    onClick = { navController.navigate("cardDetail/${item.id}") }
                 )
             }
         }
@@ -102,7 +103,7 @@ fun CardItem(
             .padding(top = 15.dp)
             .border(
                 width = 3.dp,
-                color = item.borderColor,
+                color = Color(item.borderColor),
                 shape = RoundedCornerShape(10.dp)
             ),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
@@ -114,7 +115,7 @@ fun CardItem(
         ) {
             Image(
                 painter = painterResource(id = item.backgroundRes),
-                contentDescription = "Sfondo card${item.id}",
+                contentDescription = "Background card${item.id}",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .matchParentSize()

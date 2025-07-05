@@ -1,6 +1,5 @@
 package com.example.almaware.ui.screens.home.data
 
-import androidx.compose.ui.graphics.Color
 import com.example.almaware.R
 
 val backgrounds = listOf(
@@ -44,21 +43,22 @@ val cardOverlays = listOf(
 )
 
 val borderColors = listOf(
-    Color(0xFFE5243B),
-    Color(0xFFDDA63A),
-    Color(0xFF4C9F38),
-    Color(0xFFC5192D),
-    Color(0xFFFF3A21),
-    Color(0xFF26BDE2),
-    Color(0xFFFCC30B),
-    Color(0xFFA21942),
-    Color(0xFFFD6925),
-    Color(0xFFDD1367),
-    Color(0xFFFD9D24),
-    Color(0xFFBF8B2E),
-    Color(0xFF3F7E44),
-    Color(0xFF0A97D9),
-    Color(0xFF56C02B),
-    Color(0xFF00689D),
-    Color(0xFF19486A),
+    0xFFE5243BL,
+    0xFFDDA63AL,
+    0xFF4C9F38L,
+    0xFFC5192DL,
+    0xFFFF3A21L,
+    0xFF26BDE2L,
+    0xFFFCC30BL,
+    0xFFA21942L,
+    0xFFFD6925L,
+    0xFFDD1367L,
+    0xFFFD9D24L,
+    0xFFBF8B2EL,
+    0xFF3F7E44L,
+    0xFF0A97D9L,
+    0xFF56C02BL,
+    0xFF00689DL,
+    0xFF19486AL,
 )
+
