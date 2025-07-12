@@ -3,7 +3,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp) // per Room
+    alias(libs.plugins.ksp)
+
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -83,13 +85,14 @@ dependencies {
     // Serialization
     implementation(libs.kotlinx.serialization.json)
 
-    // Charts per Statistics
-    implementation(libs.vico.compose)
-    implementation(libs.vico.compose.m3)
-    implementation(libs.vico.core)
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
 
-    // Lottie Animations
-    implementation(libs.lottie.compose)
+    // Add the dependencies for any other desired Firebase products
+    implementation(libs.firebase.database.ktx)
+    implementation(libs.firebase.auth.ktx)
+    implementation(platform(libs.firebase.bom.v3270))
 
     // Test
     testImplementation(libs.junit)

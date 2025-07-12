@@ -9,6 +9,7 @@ import com.example.almaware.ui.screens.auth.AuthenticationScreen
 import com.example.almaware.ui.screens.auth.sign.SignInScreen
 import com.example.almaware.ui.screens.auth.sign.SignUpScreen
 import com.example.almaware.ui.screens.home.HomeScreen
+import com.example.almaware.ui.screens.profile.ProfileScreen
 import com.example.almaware.ui.screens.sdg.SdgScreen
 import com.example.almaware.ui.screens.splash.SplashScreen
 import com.example.almaware.utils.generateCardById
@@ -21,6 +22,7 @@ sealed interface AlmAwareRoute {
     @Serializable data object SignIn : AlmAwareRoute
     @Serializable data object SignUp : AlmAwareRoute
     @Serializable data object Home : AlmAwareRoute
+    @Serializable data object Profile : AlmAwareRoute
 }
 
 // Main Navigation Graph
@@ -65,6 +67,9 @@ fun AlmAwareNavGraph(navController: NavHostController) {
                     card
                 )
             }
+        }
+        composable<AlmAwareRoute.Profile> {
+            ProfileScreen(navController)
         }
     }
 }

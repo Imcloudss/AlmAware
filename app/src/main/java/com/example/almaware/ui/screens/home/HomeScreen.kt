@@ -27,22 +27,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.almaware.data.model.HomeCard
 import com.example.almaware.ui.composables.AppBar
 import com.example.almaware.ui.composables.BottomNavigationBar
 import com.example.almaware.ui.screens.home.data.backgrounds
 import com.example.almaware.ui.screens.home.data.borderColors
 import com.example.almaware.ui.screens.home.data.cardOverlays
-import kotlinx.serialization.Serializable
-
-// Data class per le card
-@Serializable
-data class HomeCard(
-    val id: Int,
-    val backgroundRes: Int,
-    val overlayRes: Int,
-    val borderColor: Long,
-    val route: String,
-)
 
 @Composable
 fun HomeScreen(

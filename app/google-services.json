@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "671591337676",
+    "project_id": "almaware",
+    "storage_bucket": "almaware.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:671591337676:android:690d785d17628afc9b7c69",
+        "android_client_info": {
+          "package_name": "com.example.almaware"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmUcouT_Be35Axp4bianuDXbKjhWbBsws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -50,7 +50,7 @@ fun BottomNavigationBar(navController: NavController) {
             // Profile
             NavigationBarItem(
                 selected = false,
-                onClick = { /*navController.navigate(AlmAwareRoute.Profile)*/ },
+                onClick = { navController.navigate(AlmAwareRoute.Profile) },
                 icon = {
                     Icon(
                         painter = painterResource(R.drawable.profilicon), // Un solo drawable

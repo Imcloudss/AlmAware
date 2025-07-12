@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -19,6 +20,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,15 +33,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.almaware.R
+import com.example.almaware.data.model.HomeCard
 import com.example.almaware.ui.composables.AppBar
 import com.example.almaware.ui.composables.BottomNavigationBar
-import com.example.almaware.ui.screens.home.HomeCard
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SdgScreen(
     navController: NavController,
-    item: HomeCard
+    item: HomeCard,
+    viewModel: SdgViewModel = koinViewModel()
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.loadSdgById(item.id)
+    }
+
+    val sdg = viewModel.sdg.value
+
     Scaffold(
         topBar = {
             AppBar(
@@ -66,7 +76,19 @@ fun SdgScreen(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .matchParentSize()
-                        .graphicsLayer { alpha = 0.5f }
+                        .graphicsLayer { alpha = 0.45f }
+                )
+
+                Text(
+                    text = sdg?.title ?: "Caricamento...",
+                    modifier = Modifier
+                        .fillMaxWidth()  // Aggiungi questo se necessario
+                        .align(Alignment.Center)
+                        .offset(y = (-30).dp),
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(item.borderColor),
+                    textAlign = TextAlign.Center
                 )
             }
 
@@ -89,13 +111,13 @@ fun SdgScreen(
             Spacer(modifier = Modifier.fillMaxHeight(0.01f))
 
             Text(
-                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna. Pellentesque sit amet sapien fringilla, mattis ligula consectetur, ultrices mauris. Maecenas vitae mattis tellus. Nullam quis imperdiet augue. ",
+                text = sdg?.subtitle ?: "Caricamento descrizione...",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 textAlign = TextAlign.Center,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.Bold,
                 color = Color.Black,
             )
 
@@ -110,32 +132,40 @@ fun SdgScreen(
                 // Button Unibo (outlined)
                 OutlinedButton(
                     onClick = { /* Azione per Unibo */ },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(IntrinsicSize.Min),
                     border = BorderStroke(2.dp, Color(item.borderColor)),
                     colors = ButtonDefaults.outlinedButtonColors(
                         contentColor = Color(item.borderColor)
                     )
                 ) {
                     Text(
-                        text = "Unibo",
+                        text = "What does Unibo do?",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
 
                 // Button Student (filled)
                 Button(
                     onClick = { /* Azione per Student */ },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(IntrinsicSize.Min),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(item.borderColor),
                         contentColor = Color.White
                     )
                 ) {
                     Text(
-                        text = "Student",
+                        text = "What can we do?",
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
             }

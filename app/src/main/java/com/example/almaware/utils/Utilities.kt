@@ -1,9 +1,9 @@
 package com.example.almaware.utils
 
-import com.example.almaware.ui.screens.home.HomeCard
 import com.example.almaware.ui.screens.home.data.backgrounds
 import com.example.almaware.ui.screens.home.data.borderColors
 import com.example.almaware.ui.screens.home.data.cardOverlays
+import com.example.almaware.data.model.HomeCard
 
 fun generateCardById(id: Int): HomeCard {
     return HomeCard(

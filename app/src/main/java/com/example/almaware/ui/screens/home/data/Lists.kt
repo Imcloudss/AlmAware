@@ -61,4 +61,3 @@ val borderColors = listOf(
     0xFF00689DL,
     0xFF19486AL,
 )
-

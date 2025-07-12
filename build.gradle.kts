@@ -4,5 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.kotlin.serialization) apply false // NUOVO
-    alias(libs.plugins.ksp) apply false // NUOVO per Room (KSP)
+    alias(libs.plugins.ksp) apply false
+
+    id("com.google.gms.google-services") version "4.4.3" apply false
 }
