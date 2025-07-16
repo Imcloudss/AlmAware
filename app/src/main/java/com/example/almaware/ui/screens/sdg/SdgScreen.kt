@@ -1,5 +1,6 @@
 package com.example.almaware.ui.screens.sdg
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +22,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,11 +37,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.almaware.R
 import com.example.almaware.data.model.HomeCard
 import com.example.almaware.ui.composables.AppBar
 import com.example.almaware.ui.composables.BottomNavigationBar
 import org.koin.androidx.compose.koinViewModel
+import com.google.firebase.storage.FirebaseStorage
 
 @Composable
 fun SdgScreen(
@@ -44,45 +51,71 @@ fun SdgScreen(
     item: HomeCard,
     viewModel: SdgViewModel = koinViewModel()
 ) {
+    val sdg = viewModel.sdg.value
+
     LaunchedEffect(Unit) {
         viewModel.loadSdgById(item.id)
     }
 
-    val sdg = viewModel.sdg.value
+//    LaunchedEffect(sdg) {
+//        sdg?.description?.forEach { stat ->
+//            Log.d("Descrizione", "Numero: ${stat.number}")
+//        }
+//    }
+
+    var imageUrl by remember { mutableStateOf<String?>(null) }
+    var backgroundUrl by remember { mutableStateOf<String?>(null) }
+
+    // Ottieni gli URL dalle reference
+    LaunchedEffect(item.id) {
+        val storage = FirebaseStorage.getInstance()
+
+        // Ottieni URL per l'immagine
+        storage.reference.child("cards/card${item.id}.png")
+            .downloadUrl
+            .addOnSuccessListener { uri ->
+                imageUrl = uri.toString()
+            }
+
+        // Ottieni URL per lo sfondo
+        storage.reference.child("backgrounds/sfondo${item.id}.png")
+            .downloadUrl
+            .addOnSuccessListener { uri ->
+                backgroundUrl = uri.toString()
+            }
+    }
 
     Scaffold(
         topBar = {
-            AppBar(
-                "Prove",
-                navController
-            )
+            AppBar("Prove", navController)
         },
         bottomBar = {
             BottomNavigationBar(navController)
         }
     ) { contentPadding ->
         Column(
-            modifier = Modifier
-                .padding(contentPadding)
+            modifier = Modifier.padding(contentPadding)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(220.dp)
             ) {
-                Image(
-                    painter = painterResource(id = item.backgroundRes),
-                    contentDescription = "Background card${item.id}",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .matchParentSize()
-                        .graphicsLayer { alpha = 0.45f }
-                )
+                backgroundUrl?.let { url ->
+                    AsyncImage(
+                        model = url,
+                        contentDescription = "Background SDG ${item.id}",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .matchParentSize()
+                            .graphicsLayer { alpha = 0.45f }
+                    )
+                }
 
                 Text(
                     text = sdg?.title ?: "Caricamento...",
                     modifier = Modifier
-                        .fillMaxWidth()  // Aggiungi questo se necessario
+                        .fillMaxWidth()
                         .align(Alignment.Center)
                         .offset(y = (-30).dp),
                     fontSize = 30.sp,
@@ -98,15 +131,17 @@ fun SdgScreen(
                 contentScale = ContentScale.Crop
             )
 
-            Image(
-                painter = painterResource(id = item.overlayRes),
-                contentDescription = "Card${item.id}",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .offset(y= (-90).dp)
-                    .size(150.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
+            imageUrl?.let { url ->
+                AsyncImage(
+                    model = url,
+                    contentDescription = "Card SDG ${item.id}",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .offset(y = (-90).dp)
+                        .size(150.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
 
             Spacer(modifier = Modifier.fillMaxHeight(0.01f))
 
@@ -129,7 +164,6 @@ fun SdgScreen(
                     .padding(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Button Unibo (outlined)
                 OutlinedButton(
                     onClick = { /* Azione per Unibo */ },
                     modifier = Modifier
@@ -149,7 +183,6 @@ fun SdgScreen(
                     )
                 }
 
-                // Button Student (filled)
                 Button(
                     onClick = { /* Azione per Student */ },
                     modifier = Modifier

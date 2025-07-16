@@ -69,6 +69,7 @@ dependencies {
     // Room Database
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.firebase.storage.ktx)
     ksp(libs.androidx.room.compiler)
 
     // ViewModel
@@ -93,6 +94,10 @@ dependencies {
     implementation(libs.firebase.database.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(platform(libs.firebase.bom.v3270))
+
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.compose.v200rc01)
 
     // Test
     testImplementation(libs.junit)

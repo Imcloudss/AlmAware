@@ -1,5 +1,7 @@
 [versions]
 agp = "8.7.3"
+coilCompose = "2.6.0"
+coilComposeVersion = "2.0.0-rc01"
 firebaseAuthKtx = "23.2.1"
 firebaseBom = "33.16.0"
 firebaseBomVersion = "32.7.0"
@@ -27,11 +29,14 @@ serialization = "1.6.3"
 vico = "1.13.1"
 lottie = "6.1.0"
 ksp = "2.0.0-1.0.21"
+firebaseStorageKtx = "21.0.2"
 
 [libraries]
 # Esistenti
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+coil-compose-v200rc01 = { module = "io.coil-kt:coil-compose", version.ref = "coilComposeVersion" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
@@ -84,6 +89,7 @@ vico-core = { group = "com.patrykandpatrick.vico", name = "core", version.ref = 
 
 # Lottie Animations
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
+firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorageKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

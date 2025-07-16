@@ -44,7 +44,7 @@ fun BottomNavigationBar(navController: NavController) {
                         tint = Color.Unspecified,
                         modifier = Modifier.size(30.dp)
                     )
-                },
+                }
             )
 
             // Profile
