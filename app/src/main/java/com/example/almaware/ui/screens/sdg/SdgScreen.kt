@@ -1,6 +1,5 @@
 package com.example.almaware.ui.screens.sdg
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -8,8 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -17,6 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,6 +33,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -40,10 +43,15 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.almaware.R
 import com.example.almaware.data.model.HomeCard
+import com.example.almaware.data.model.SDG
 import com.example.almaware.ui.composables.AppBar
 import com.example.almaware.ui.composables.BottomNavigationBar
-import org.koin.androidx.compose.koinViewModel
 import com.google.firebase.storage.FirebaseStorage
+import org.koin.androidx.compose.koinViewModel
+
+val VigaFontFamily = FontFamily(
+    Font(R.font.viga)
+)
 
 @Composable
 fun SdgScreen(
@@ -56,12 +64,6 @@ fun SdgScreen(
     LaunchedEffect(Unit) {
         viewModel.loadSdgById(item.id)
     }
-
-//    LaunchedEffect(sdg) {
-//        sdg?.description?.forEach { stat ->
-//            Log.d("Descrizione", "Numero: ${stat.number}")
-//        }
-//    }
 
     var imageUrl by remember { mutableStateOf<String?>(null) }
     var backgroundUrl by remember { mutableStateOf<String?>(null) }
@@ -121,7 +123,8 @@ fun SdgScreen(
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(item.borderColor),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    fontFamily = VigaFontFamily
                 )
             }
 
@@ -143,20 +146,25 @@ fun SdgScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.fillMaxHeight(0.01f))
-
             Text(
                 text = sdg?.subtitle ?: "Caricamento descrizione...",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 16.dp)
+                    .offset(y = (-60).dp),
                 textAlign = TextAlign.Center,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
                 color = Color.Black,
+                fontFamily = VigaFontFamily
             )
 
-            Spacer(modifier = Modifier.fillMaxHeight(0.3f))
+            if (sdg != null) {
+                DescriptionCards(
+                    cardColor = Color(item.borderColor),
+                    sdg = sdg
+                )
+            }
 
             Row(
                 modifier = Modifier
@@ -199,6 +207,86 @@ fun SdgScreen(
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun DescriptionCards(
+    numberOfCards: Int = 3,
+    cardColor: Color,
+    spacing: Int = 8,
+    paddingHorizontal: Int = 16,
+    sdg: SDG
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = paddingHorizontal.dp)
+            .offset(y = (-25).dp),
+        horizontalArrangement = Arrangement.spacedBy(spacing.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        repeat(numberOfCards) { index ->
+            Card(
+                modifier = Modifier
+                    .weight(1f)
+                    .aspectRatio(1f),
+                colors = CardDefaults.cardColors(
+                    containerColor = cardColor
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 2.dp
+                )
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = sdg.description[index].number,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        color = Color.White,
+                        fontFamily = VigaFontFamily
+                    )
+
+                    if(sdg.description[index].unit.isNotEmpty()) {
+                        Text(
+                            text = sdg.description[index].unit,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            textAlign = TextAlign.Center,
+                            color = Color.White,
+                            fontFamily = VigaFontFamily,
+                            modifier = Modifier
+                                .padding(bottom = 2.dp)
+                                .offset(y = (-6).dp)
+                        )
+                    }
+                    val modifierText: Modifier = if(sdg.description[index].unit.isNotEmpty()) {
+                        Modifier
+                            .padding(start = 3.dp, end = 3.dp, bottom = 5.dp)
+                            .offset(y = (-9).dp)
+                    } else {
+                        Modifier
+                            .padding(start = 3.dp, end = 3.dp, bottom = 5.dp)
+                            .offset(y = (-2).dp)
+                    }
+                    Text(
+                        text = sdg.description[index].text,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Center,
+                        color = Color.White,
+                        fontFamily = VigaFontFamily,
+                        modifier = modifierText,
+                        lineHeight = 15.sp
                     )
                 }
             }

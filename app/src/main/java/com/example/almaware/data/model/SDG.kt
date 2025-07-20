@@ -14,5 +14,6 @@ data class SDG(
     val course_units: Int = 0,
     val publications_unibo: Int = 0,
     val image: String = "",
-    val background: String = ""
+    val background: String = "",
+    val desc_kiosk: String = ""
 )
