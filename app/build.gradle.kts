@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.extended)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
@@ -70,6 +71,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.firebase.storage.ktx)
+    implementation(libs.androidx.runtime.livedata)
     ksp(libs.androidx.room.compiler)
 
     // ViewModel
@@ -94,10 +96,13 @@ dependencies {
     implementation(libs.firebase.database.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(platform(libs.firebase.bom.v3270))
+    implementation(libs.play.services.auth)
 
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.compose.v200rc01)
+
+    implementation(libs.androidx.lifecycle.livedata.ktx)
 
     // Test
     testImplementation(libs.junit)

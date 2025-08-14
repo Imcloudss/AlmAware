@@ -6,6 +6,8 @@ import com.example.almaware.data.repository.ProjectRepository
 import com.example.almaware.data.repository.SDGRepository
 import com.example.almaware.data.repository.StudentRepository
 import com.example.almaware.ui.screens.sdg.SdgViewModel
+import com.example.almaware.ui.screens.sdg.unibo.UniboViewModel
+import com.example.almaware.ui.screens.sdg.student.StudentViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -17,8 +19,8 @@ val appModule = module {
     single { StudentRepository() }
     single { BadgeRepository() }
 
-    // ViewModels (da creare)
+    // ViewModels
     viewModel { SdgViewModel(get()) }
-//    viewModel { ProjectViewModel(get()) }
-//    viewModel { StudentViewModel(get()) }
+    viewModel { UniboViewModel(get()) }
+    viewModel { StudentViewModel(get()) }
 }

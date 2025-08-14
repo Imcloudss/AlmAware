@@ -15,5 +15,6 @@ data class SDG(
     val publications_unibo: Int = 0,
     val image: String = "",
     val background: String = "",
-    val desc_kiosk: String = ""
+    val desc_kiosk: String = "",
+    val objectives: List<String> = emptyList()
 )

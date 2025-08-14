@@ -1,6 +1,11 @@
 package com.example.almaware.ui.theme
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,9 +16,14 @@ import com.example.almaware.ui.screens.auth.sign.SignUpScreen
 import com.example.almaware.ui.screens.home.HomeScreen
 import com.example.almaware.ui.screens.profile.ProfileScreen
 import com.example.almaware.ui.screens.sdg.SdgScreen
+import com.example.almaware.ui.screens.sdg.badge.BadgeDetailScreen
+import com.example.almaware.ui.screens.sdg.student.StudentScreen
+import com.example.almaware.ui.screens.sdg.student.StudentViewModel
+import com.example.almaware.ui.screens.sdg.unibo.UniboScreen
 import com.example.almaware.ui.screens.splash.SplashScreen
 import com.example.almaware.utils.generateCardById
 import kotlinx.serialization.Serializable
+import org.koin.androidx.compose.koinViewModel
 
 // Navigation Routes
 sealed interface AlmAwareRoute {
@@ -68,8 +78,49 @@ fun AlmAwareNavGraph(navController: NavHostController) {
                 )
             }
         }
+        composable("unibo/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
+            if (id != null) {
+                val card = generateCardById(id)
+                UniboScreen(
+                    navController,
+                    card
+                )
+            }
+        }
+        composable("student/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
+            if (id != null) {
+                val card = generateCardById(id)
+                StudentScreen(
+                    navController,
+                    card
+                )
+            }
+        }
         composable<AlmAwareRoute.Profile> {
             ProfileScreen(navController)
+        }
+        composable("badge/{badgeName}") { backStackEntry ->
+            val badgeNameArg = backStackEntry.arguments?.getString("badgeName") ?: return@composable
+            val badgeName = Uri.decode(badgeNameArg)
+
+            val badgeViewModel: StudentViewModel = koinViewModel()
+            val badges by badgeViewModel.badges.collectAsState()
+
+            // Se la lista è vuota, la carico
+            LaunchedEffect(Unit) {
+                if (badges.isEmpty()) {
+                    badgeViewModel.loadBadges()
+                }
+            }
+
+            val badge = badges.firstOrNull { it.badgeName == badgeName }
+            Log.d("BadgeDetailScreen", "Badge trovato: $badge")
+
+            if (badge != null) {
+                BadgeDetailScreen(navController, badge)
+            }
         }
     }
 }

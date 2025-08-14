@@ -1,7 +1,5 @@
 package com.example.almaware.ui.screens.profile
 
-import android.widget.Space
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -83,7 +80,7 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.fillMaxHeight(0.32f))
 
                 Text(
-                    text = "Create account",
+                    text = "My account",
                     modifier = Modifier.padding(horizontal = 40.dp),
                     fontSize = 35.sp,
                     fontWeight = FontWeight.Bold,
