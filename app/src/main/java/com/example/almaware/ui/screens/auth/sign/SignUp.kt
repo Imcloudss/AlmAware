@@ -22,6 +22,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,13 +43,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.almaware.R
+import com.example.almaware.ui.screens.auth.AuthState
+import com.example.almaware.ui.screens.auth.AuthViewModel
 import com.example.almaware.ui.theme.AlmAwareRoute
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SignUpScreen(
     navController: NavHostController,
+    viewModel: AuthViewModel = koinViewModel()
 ) {
     var acceptPolicies by remember { mutableStateOf(false) }
+    var confirmPassword by remember { mutableStateOf("") }
+
+    val authState = viewModel.authState
+
+    // Navigazione automatica su successo
+    LaunchedEffect(authState) {
+        if (authState is AuthState.Success) {
+            navController.navigate(AlmAwareRoute.Home) {
+                popUpTo(AlmAwareRoute.SignUp) { inclusive = true }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -73,7 +90,7 @@ fun SignUpScreen(
             contentScale = ContentScale.Crop
         )
 
-        Column (
+        Column(
             modifier = Modifier
                 .fillMaxHeight()
                 .align(Alignment.Center)
@@ -98,151 +115,95 @@ fun SignUpScreen(
         ) {
             Spacer(modifier = Modifier.fillMaxHeight(0.26f))
 
-            // Text Field per inserire il nome
+            // Name
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
-                placeholder = {
-                    Text(
-                        text = "Name",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(horizontal = 30.dp)
-                    )
-                        },
+                value = viewModel.name,
+                label = { Text("Username") },
+                onValueChange = { viewModel.name = it },
+                placeholder = { Text("Username", fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color.Gray) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 25.dp)
                     .height(60.dp),
                 shape = RoundedCornerShape(60),
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    unfocusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    focusedContainerColor = Color.White,  // Interno bianco
-                    unfocusedContainerColor = Color.White  // Interno bianco
+                    focusedIndicatorColor = Color(0xFFF0EDE8),
+                    unfocusedIndicatorColor = Color(0xFFF0EDE8),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 ),
                 singleLine = true
             )
 
             Spacer(modifier = Modifier.fillMaxHeight(0.03f))
 
-            // Text Field per inserire l'email
+            // Email
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
-                placeholder = {
-                    Text(
-                        text = "email",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(horizontal = 30.dp)
-                    )
-                },
+                value = viewModel.email,
+                label = { Text("Email") },
+                onValueChange = { viewModel.email = it },
+                placeholder = { Text("Email", fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color.Gray) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 25.dp)
                     .height(60.dp),
                 shape = RoundedCornerShape(60),
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    unfocusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    focusedContainerColor = Color.White,  // Interno bianco
-                    unfocusedContainerColor = Color.White  // Interno bianco
+                    focusedIndicatorColor = Color(0xFFF0EDE8),
+                    unfocusedIndicatorColor = Color(0xFFF0EDE8),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 ),
                 singleLine = true
             )
 
             Spacer(modifier = Modifier.fillMaxHeight(0.03f))
 
-            // Text Field per inserire il campus
+            // Password
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
-                placeholder = {
-                    Text(
-                        text = "Campus",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(horizontal = 30.dp)
-                    )
-                },
+                value = viewModel.password,
+                onValueChange = { viewModel.password = it },
+                label = { Text("Password") },
+                placeholder = { Text("Password", fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color.Gray) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 25.dp)
                     .height(60.dp),
                 shape = RoundedCornerShape(60),
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    unfocusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    focusedContainerColor = Color.White,  // Interno bianco
-                    unfocusedContainerColor = Color.White  // Interno bianco
+                    focusedIndicatorColor = Color(0xFFF0EDE8),
+                    unfocusedIndicatorColor = Color(0xFFF0EDE8),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 ),
                 singleLine = true
             )
 
             Spacer(modifier = Modifier.fillMaxHeight(0.03f))
 
-            // Text Field per inserire la password
+            // Confirm password
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
-                placeholder = {
-                    Text(
-                        text = "Password",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(horizontal = 30.dp)
-                    )
-                },
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = { Text("Confirm password") },
+                placeholder = { Text("Confirm password", fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color.Gray) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 25.dp)
                     .height(60.dp),
                 shape = RoundedCornerShape(60),
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    unfocusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    focusedContainerColor = Color.White,  // Interno bianco
-                    unfocusedContainerColor = Color.White  // Interno bianco
-                ),
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.fillMaxHeight(0.03f))
-
-            // Text Field per confermare la password
-            OutlinedTextField(
-                value = "",
-                onValueChange = {},
-                placeholder = {
-                    Text(
-                        text = "Confirm password",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color.Gray,
-                        modifier = Modifier.padding(horizontal = 30.dp)
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 25.dp)
-                    .height(60.dp),
-                shape = RoundedCornerShape(60),
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    unfocusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    focusedContainerColor = Color.White,  // Interno bianco
-                    unfocusedContainerColor = Color.White  // Interno bianco
+                    focusedIndicatorColor = Color(0xFFF0EDE8),
+                    unfocusedIndicatorColor = Color(0xFFF0EDE8),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 ),
                 singleLine = true
             )
 
             Spacer(modifier = Modifier.fillMaxHeight(0.04f))
 
+            // Check policies
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -257,11 +218,10 @@ fun SignUpScreen(
                         uncheckedColor = Color.Gray
                     ),
                 )
-
                 Text(
                     text = buildAnnotatedString {
                         withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
-                            append("I accept all the policies and therms")
+                            append("I accept all the policies and terms")
                         }
                     },
                     fontSize = 20.sp,
@@ -276,11 +236,13 @@ fun SignUpScreen(
 
             Spacer(modifier = Modifier.fillMaxHeight(0.11f))
 
+            // SIGN UP button
             Button(
                 onClick = {
-                    // Fare controllo una volta che si ha anche il db
-                    navController.navigate(AlmAwareRoute.Home)
-                          },
+                    if (acceptPolicies && viewModel.password == confirmPassword) {
+                        viewModel.signUp()
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
@@ -291,19 +253,30 @@ fun SignUpScreen(
                 )
             ) {
                 Text(
-                    text = "Sign up",
+                    text = if (authState is AuthState.Loading) "Loading..." else "Sign up",
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             }
 
+            // Messaggi di errore
+            if (authState is AuthState.Error) {
+                Text(
+                    text = authState.message,
+                    color = Color.Red,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                )
+            }
+
             Spacer(modifier = Modifier.fillMaxHeight(0.05f))
 
+            // Already have account? Sign In
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(color = Color.Gray)) {
-                        append("Always have an account? ")
+                        append("Already have an account? ")
                     }
                     withStyle(
                         style = SpanStyle(

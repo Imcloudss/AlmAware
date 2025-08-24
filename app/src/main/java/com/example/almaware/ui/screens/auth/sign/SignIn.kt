@@ -3,23 +3,10 @@ package com.example.almaware.ui.screens.auth.sign
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,12 +23,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.almaware.R
+import com.example.almaware.ui.screens.auth.AuthState
+import com.example.almaware.ui.screens.auth.AuthViewModel
 import com.example.almaware.ui.theme.AlmAwareRoute
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SignInScreen(
     navController: NavHostController,
+    viewModel: AuthViewModel = koinViewModel()
 ) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
+    val authState = viewModel.authState
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -92,17 +88,17 @@ fun SignInScreen(
         ) {
             Spacer(modifier = Modifier.fillMaxHeight(0.42f))
 
-            // Text Field per inserire l'email
+            // Email
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = email,
+                onValueChange = { email = it },
+                label = { Text("Email") },
                 placeholder = {
                     Text(
-                        text = "email",
+                        text = "Email",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color.Gray,
-                        modifier = Modifier.padding(horizontal = 30.dp)
                     )
                 },
                 modifier = Modifier
@@ -111,27 +107,27 @@ fun SignInScreen(
                     .height(60.dp),
                 shape = RoundedCornerShape(60),
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    unfocusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    focusedContainerColor = Color.White,  // Interno bianco
-                    unfocusedContainerColor = Color.White  // Interno bianco
+                    focusedIndicatorColor = Color(0xFFF0EDE8),
+                    unfocusedIndicatorColor = Color(0xFFF0EDE8),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 ),
                 singleLine = true
             )
 
             Spacer(modifier = Modifier.fillMaxHeight(0.03f))
 
-            // Text Field per inserire la password
+            // Password
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
                 placeholder = {
                     Text(
                         text = "Password",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Medium,
                         color = Color.Gray,
-                        modifier = Modifier.padding(horizontal = 30.dp)
                     )
                 },
                 modifier = Modifier
@@ -140,10 +136,10 @@ fun SignInScreen(
                     .height(60.dp),
                 shape = RoundedCornerShape(60),
                 colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    unfocusedIndicatorColor = Color(0xFFF0EDE8),  // Bordo grigio chiaro
-                    focusedContainerColor = Color.White,  // Interno bianco
-                    unfocusedContainerColor = Color.White  // Interno bianco
+                    focusedIndicatorColor = Color(0xFFF0EDE8),
+                    unfocusedIndicatorColor = Color(0xFFF0EDE8),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 ),
                 singleLine = true
             )
@@ -160,7 +156,7 @@ fun SignInScreen(
                 fontWeight = FontWeight.Medium,
                 color = Color.Gray,
                 modifier = Modifier
-                    .clickable { /* Apri policies */ }
+                    .clickable { /* Recupero password */ }
                     .align(Alignment.CenterHorizontally)
             )
 
@@ -168,8 +164,9 @@ fun SignInScreen(
 
             Button(
                 onClick = {
-                    // Fare controllo una volta che si ha anche il db
-                    navController.navigate(AlmAwareRoute.Home)
+                    viewModel.email = email
+                    viewModel.password = password
+                    viewModel.signIn()
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -212,6 +209,30 @@ fun SignInScreen(
                 fontWeight = FontWeight.Medium,
                 color = Color.Gray,
             )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Stato autenticazione
+            when (authState) {
+                is AuthState.Loading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                }
+                is AuthState.Success -> {
+                    LaunchedEffect(Unit) {
+                        navController.navigate(AlmAwareRoute.Home) {
+                            popUpTo(AlmAwareRoute.SignIn) { inclusive = true }
+                        }
+                    }
+                }
+                is AuthState.Error -> {
+                    Text(
+                        text = authState.message,
+                        color = Color.Red,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
+                else -> {}
+            }
         }
     }
 }

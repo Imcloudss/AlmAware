@@ -38,3 +38,4 @@ fun getDrawableForSdg(id: Int): Int {
         else -> R.drawable.bubble1
     }
 }
+

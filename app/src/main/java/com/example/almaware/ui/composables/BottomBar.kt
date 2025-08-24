@@ -64,7 +64,7 @@ fun BottomNavigationBar(navController: NavController) {
             // Awards
             NavigationBarItem(
                 selected = false,
-                onClick = { /*navController.navigate(AlmAwareRoute.Awards)*/},
+                onClick = { navController.navigate(AlmAwareRoute.Awards) },
                 icon = {
                     Icon(
                         painter = painterResource(R.drawable.badgeicon), // Un solo drawable

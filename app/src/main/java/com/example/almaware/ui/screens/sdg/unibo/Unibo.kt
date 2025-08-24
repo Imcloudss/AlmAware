@@ -1,6 +1,5 @@
 package com.example.almaware.ui.screens.sdg.unibo
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -47,6 +46,11 @@ import org.koin.androidx.compose.koinViewModel
 val VigaFontFamily = FontFamily(
     Font(R.font.viga)
 )
+
+const val stringCourse = "course"
+const val stringProject = "project"
+const val stringPublication = "publication"
+// const val stringGraph = "graph"
 
 @Composable
 fun UniboScreen(
@@ -143,7 +147,7 @@ fun UniboScreen(
                         iconRes = R.drawable.courseunits,
                         value = sdg?.course_units.toString(),
                         label = "course units",
-                        onClick = {  },
+                        onClick = { navController.navigate("clickable/${item.id}/${stringCourse}/${sdg?.course_units}") },
                         item = item
                     )
 
@@ -154,7 +158,7 @@ fun UniboScreen(
                         iconRes = R.drawable.publication,
                         value = sdg?.publications_unibo.toString(),
                         label = "publications",
-                        onClick = {  },
+                        onClick = { navController.navigate("clickable/${item.id}/${stringPublication}/${sdg?.publications_unibo}") },
                         item = item
                     )
                 }
@@ -173,17 +177,15 @@ fun UniboScreen(
                         iconRes = R.drawable.project,
                         value = projectCount.toString(),
                         label = if (projectCount == 1) "project" else "projects",
-                        onClick = {  },
+                        onClick = { navController.navigate("clickable/${item.id}/${stringProject}/${projectCount}") },
                         item = item
                     )
 
-                    Log.d("Projects", "Project count for SDG ${item.id}: $projectCount")
-
-                    // Card Water Consumption
+                    // Card
                     DashboardCard(
                         modifier = Modifier
                             .weight(1f),
-                        iconRes = R.drawable.key,
+                        iconRes = R.drawable.graph,
                         value = "TODO",
                         label = "of water\nconsumption",
                         onClick = {  },

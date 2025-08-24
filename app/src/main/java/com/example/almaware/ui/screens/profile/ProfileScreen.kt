@@ -36,6 +36,7 @@ import androidx.navigation.NavController
 import com.example.almaware.R
 import com.example.almaware.ui.composables.AppBar
 import com.example.almaware.ui.composables.BottomNavigationBar
+import com.example.almaware.ui.theme.AlmAwareRoute
 
 @Composable
 fun ProfileScreen(
@@ -224,7 +225,7 @@ fun ProfileScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Button(
-                        onClick = { /* Azione per Student */ },
+                        onClick = { navController.navigate(AlmAwareRoute.Flower) },
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFFF0EDE8),
@@ -240,7 +241,7 @@ fun ProfileScreen(
 
                     // Button Student (filled)
                     Button(
-                        onClick = { /* Azione per Student */ },
+                        onClick = { navController.navigate(AlmAwareRoute.Awards) },
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFFF0EDE8),

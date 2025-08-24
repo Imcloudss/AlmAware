@@ -1,7 +1,6 @@
 package com.example.almaware.ui.theme
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -13,10 +12,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.almaware.ui.screens.auth.AuthenticationScreen
 import com.example.almaware.ui.screens.auth.sign.SignInScreen
 import com.example.almaware.ui.screens.auth.sign.SignUpScreen
+import com.example.almaware.ui.screens.awards.AwardsScreen
+import com.example.almaware.ui.screens.flower.FlowerScreen
 import com.example.almaware.ui.screens.home.HomeScreen
 import com.example.almaware.ui.screens.profile.ProfileScreen
 import com.example.almaware.ui.screens.sdg.SdgScreen
 import com.example.almaware.ui.screens.sdg.badge.BadgeDetailScreen
+import com.example.almaware.ui.screens.sdg.unibo.clickable.ClickableSdgScreen
 import com.example.almaware.ui.screens.sdg.student.StudentScreen
 import com.example.almaware.ui.screens.sdg.student.StudentViewModel
 import com.example.almaware.ui.screens.sdg.unibo.UniboScreen
@@ -33,6 +35,8 @@ sealed interface AlmAwareRoute {
     @Serializable data object SignUp : AlmAwareRoute
     @Serializable data object Home : AlmAwareRoute
     @Serializable data object Profile : AlmAwareRoute
+    @Serializable data object Awards : AlmAwareRoute
+    @Serializable data object Flower : AlmAwareRoute
 }
 
 // Main Navigation Graph
@@ -104,11 +108,9 @@ fun AlmAwareNavGraph(navController: NavHostController) {
         composable("badge/{badgeName}") { backStackEntry ->
             val badgeNameArg = backStackEntry.arguments?.getString("badgeName") ?: return@composable
             val badgeName = Uri.decode(badgeNameArg)
-
             val badgeViewModel: StudentViewModel = koinViewModel()
             val badges by badgeViewModel.badges.collectAsState()
 
-            // Se la lista è vuota, la carico
             LaunchedEffect(Unit) {
                 if (badges.isEmpty()) {
                     badgeViewModel.loadBadges()
@@ -116,10 +118,31 @@ fun AlmAwareNavGraph(navController: NavHostController) {
             }
 
             val badge = badges.firstOrNull { it.badgeName == badgeName }
-            Log.d("BadgeDetailScreen", "Badge trovato: $badge")
 
             if (badge != null) {
                 BadgeDetailScreen(navController, badge)
+            }
+        }
+        composable<AlmAwareRoute.Awards> {
+            AwardsScreen(navController)
+        }
+        composable<AlmAwareRoute.Flower> {
+            FlowerScreen(navController)
+        }
+        composable("clickable/{id}/{string}/{value}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
+            val string = backStackEntry.arguments?.getString("string")
+            val value = backStackEntry.arguments?.getString("value")?.toIntOrNull()
+            if (id != null) {
+                val card = generateCardById(id)
+                if (value != null && string != null) {
+                    ClickableSdgScreen(
+                        navController,
+                        card,
+                        string,
+                        value
+                    )
+                }
             }
         }
     }

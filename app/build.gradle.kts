@@ -84,6 +84,7 @@ dependencies {
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.coroutines.play.services)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)
@@ -91,8 +92,6 @@ dependencies {
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
-
-    // Add the dependencies for any other desired Firebase products
     implementation(libs.firebase.database.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(platform(libs.firebase.bom.v3270))
