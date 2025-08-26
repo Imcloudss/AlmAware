@@ -21,7 +21,6 @@ private fun selectDrawable(string: String): Int {
         "course" -> R.drawable.courseunits
         "project" -> R.drawable.project
         "publication" -> R.drawable.publication
-        //"graph" -> R.drawable.graph
         else -> R.drawable.info
     }
 }
@@ -29,10 +28,11 @@ private fun selectDrawable(string: String): Int {
 @Composable
 fun ComposeBubble(
     item: HomeCard,
-    string: String
+    string: String,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(200.dp)
             .padding(bottom = 20.dp),
         contentAlignment = Alignment.Center

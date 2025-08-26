@@ -1,5 +1,6 @@
 package com.example.almaware.ui.screens.sdg.unibo
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -60,12 +62,15 @@ fun UniboScreen(
     uniboViewModel: UniboViewModel = koinViewModel()
 ) {
     val sdg = sdgViewModel.sdg.value
-    val projectCount by uniboViewModel.projectCount.observeAsState(0)
+    val allProjects by uniboViewModel.projects.collectAsState()
+    val projectCount = uniboViewModel.getProjectCountForSdg(item.id.toString())
 
     LaunchedEffect(Unit) {
         sdgViewModel.loadSdgById(item.id)
-        uniboViewModel.loadProjectCountForSdg(item.id.toString())
+        uniboViewModel.loadProjects()
     }
+
+    Log.d("UniboScreen", "Projects: $allProjects")
 
     Scaffold(
         topBar = {

@@ -25,7 +25,6 @@ data class FilterState(
     val type: BadgeFilter = BadgeFilter.ALL,
     val sdgNumber: Int? = null
 ) {
-    fun isActive(): Boolean = type != BadgeFilter.ALL
 
     fun getDisplayText(): String = when(type) {
         BadgeFilter.ALL -> ""
@@ -87,15 +86,6 @@ class StudentViewModel(
         loadCurrentUser()
     }
 
-    suspend fun getBadgeByFirebaseKey(badgeKey: String): Badge? {
-        return try {
-            badgeRepository.getBadgeByKey(badgeKey)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
     private fun loadCurrentUser() {
         viewModelScope.launch {
             firebaseAuth.currentUser?.uid?.let { uid ->
@@ -115,7 +105,6 @@ class StudentViewModel(
             try {
                 _allBadges.value = badgeRepository.getAllBadges()
             } catch (e: Exception) {
-                // Gestisci errore di caricamento badge
                 e.printStackTrace()
             }
         }
@@ -165,41 +154,6 @@ class StudentViewModel(
     fun isCompletedSelected(): Boolean = isFilterSelected(BadgeFilter.COMPLETED)
     fun isToCompleteSelected(): Boolean = isFilterSelected(BadgeFilter.TO_COMPLETE)
     fun isSdgSelected(): Boolean = isFilterSelected(BadgeFilter.SDG)
-
-    // Metodo per aggiornare lo stato di completamento di un badge
-    fun toggleBadgeCompletion(badgeIndex: Int) {
-        viewModelScope.launch {
-            val currentUser = _currentUser.value
-            val uid = firebaseAuth.currentUser?.uid
-
-            if (currentUser != null && uid != null && badgeIndex >= 0 && badgeIndex < currentUser.badgeStatus.size) {
-                val currentStatus = currentUser.badgeStatus.toMutableList()
-
-                // Toggle tra 1 (completato) e 0 (non completato) all'indice specificato
-                currentStatus[badgeIndex] = if (currentStatus[badgeIndex] == 1) 0 else 1
-
-                val updatedUser = currentUser.copy(badgeStatus = currentStatus)
-
-                try {
-                    userRepository.updateUser(uid, updatedUser)
-                    _currentUser.value = updatedUser
-                } catch (e: Exception) {
-                    // Gestisci errore di aggiornamento
-                    e.printStackTrace()
-                }
-            }
-        }
-    }
-
-    // Metodo per ottenere il numero di badge completati
-    fun getCompletedBadgesCount(): Int {
-        return _currentUser.value?.badgeStatus?.count { it == 1 } ?: 0
-    }
-
-    // Metodo per ottenere il numero totale di badge
-    fun getTotalBadgesCount(): Int {
-        return _allBadges.value.size
-    }
 
     // Mantieni questo metodo per compatibilità
     fun getBadgesForSdg(sdgId: Int): List<Badge> {

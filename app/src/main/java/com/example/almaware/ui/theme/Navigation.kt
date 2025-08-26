@@ -1,6 +1,7 @@
 package com.example.almaware.ui.theme
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -18,10 +19,12 @@ import com.example.almaware.ui.screens.home.HomeScreen
 import com.example.almaware.ui.screens.profile.ProfileScreen
 import com.example.almaware.ui.screens.sdg.SdgScreen
 import com.example.almaware.ui.screens.sdg.badge.BadgeDetailScreen
-import com.example.almaware.ui.screens.sdg.unibo.clickable.ClickableSdgScreen
 import com.example.almaware.ui.screens.sdg.student.StudentScreen
 import com.example.almaware.ui.screens.sdg.student.StudentViewModel
 import com.example.almaware.ui.screens.sdg.unibo.UniboScreen
+import com.example.almaware.ui.screens.sdg.unibo.UniboViewModel
+import com.example.almaware.ui.screens.sdg.unibo.clickable.ClickableSdgScreen
+import com.example.almaware.ui.screens.sdg.unibo.clickable.project.ProjectsScreen
 import com.example.almaware.ui.screens.splash.SplashScreen
 import com.example.almaware.utils.generateCardById
 import kotlinx.serialization.Serializable
@@ -61,9 +64,11 @@ fun AlmAwareNavGraph(navController: NavHostController) {
         composable<AlmAwareRoute.Authentication> {
             AuthenticationScreen(navController)
         }
+
         composable<AlmAwareRoute.SignUp> {
             SignUpScreen(navController)
         }
+
         composable<AlmAwareRoute.SignIn> {
             SignInScreen(navController)
         }
@@ -72,6 +77,7 @@ fun AlmAwareNavGraph(navController: NavHostController) {
         composable<AlmAwareRoute.Home> {
             HomeScreen(navController)
         }
+
         composable("cardDetail/{id}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
             if (id != null) {
@@ -82,6 +88,7 @@ fun AlmAwareNavGraph(navController: NavHostController) {
                 )
             }
         }
+
         composable("unibo/{id}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
             if (id != null) {
@@ -92,6 +99,7 @@ fun AlmAwareNavGraph(navController: NavHostController) {
                 )
             }
         }
+
         composable("student/{id}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
             if (id != null) {
@@ -102,9 +110,11 @@ fun AlmAwareNavGraph(navController: NavHostController) {
                 )
             }
         }
+
         composable<AlmAwareRoute.Profile> {
             ProfileScreen(navController)
         }
+
         composable("badge/{badgeName}") { backStackEntry ->
             val badgeNameArg = backStackEntry.arguments?.getString("badgeName") ?: return@composable
             val badgeName = Uri.decode(badgeNameArg)
@@ -123,26 +133,41 @@ fun AlmAwareNavGraph(navController: NavHostController) {
                 BadgeDetailScreen(navController, badge)
             }
         }
+
         composable<AlmAwareRoute.Awards> {
             AwardsScreen(navController)
         }
+
         composable<AlmAwareRoute.Flower> {
             FlowerScreen(navController)
         }
+
         composable("clickable/{id}/{string}/{value}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
             val string = backStackEntry.arguments?.getString("string")
             val value = backStackEntry.arguments?.getString("value")?.toIntOrNull()
-            if (id != null) {
+
+            if (id != null && value != null && string != null) {
                 val card = generateCardById(id)
-                if (value != null && string != null) {
-                    ClickableSdgScreen(
-                        navController,
-                        card,
-                        string,
-                        value
-                    )
-                }
+                ClickableSdgScreen(
+                    navController,
+                    card,
+                    string,
+                    value
+                )
+            }
+        }
+
+        composable("project/{projectId}/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
+            val projectId = backStackEntry.arguments?.getString("projectId")?.toIntOrNull()
+
+            if (id != null && projectId != null) {
+                ProjectsScreen(
+                    navController,
+                    generateCardById(id),
+                    projectId
+                )
             }
         }
     }

@@ -5,6 +5,7 @@ import com.example.almaware.ui.screens.home.data.backgrounds
 import com.example.almaware.ui.screens.home.data.borderColors
 import com.example.almaware.ui.screens.home.data.cardOverlays
 import com.example.almaware.data.model.HomeCard
+import com.example.almaware.data.model.Project
 
 fun generateCardById(id: Int): HomeCard {
     return HomeCard(
@@ -39,3 +40,15 @@ fun getDrawableForSdg(id: Int): Int {
     }
 }
 
+fun caption(string: String): String {
+    return when(string) {
+        "course" -> "course units"
+        "project" -> "projects"
+        "publication" -> "publications"
+        else -> "ERROR!"
+    }
+}
+
+fun filterProjectsBySdgId(projects: List<Project>, sdgId: String): List<Project> {
+    return projects.filter { it.sdgId.trim() == sdgId.trim() }
+}
