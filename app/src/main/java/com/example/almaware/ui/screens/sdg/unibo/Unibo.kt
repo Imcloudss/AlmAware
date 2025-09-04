@@ -41,6 +41,7 @@ import com.example.almaware.R
 import com.example.almaware.data.model.HomeCard
 import com.example.almaware.ui.composables.AppBar
 import com.example.almaware.ui.composables.BottomNavigationBar
+import com.example.almaware.ui.screens.auth.AuthViewModel
 import com.example.almaware.ui.screens.sdg.SdgViewModel
 import com.example.almaware.utils.getDrawableForSdg
 import org.koin.androidx.compose.koinViewModel
@@ -59,7 +60,8 @@ fun UniboScreen(
     navController: NavController,
     item: HomeCard,
     sdgViewModel: SdgViewModel = koinViewModel(),
-    uniboViewModel: UniboViewModel = koinViewModel()
+    uniboViewModel: UniboViewModel = koinViewModel(),
+    authViewModel: AuthViewModel = koinViewModel()
 ) {
     val sdg = sdgViewModel.sdg.value
     val allProjects by uniboViewModel.projects.collectAsState()
@@ -74,7 +76,7 @@ fun UniboScreen(
 
     Scaffold(
         topBar = {
-            AppBar("Prove", navController)
+            AppBar("Prove", navController, authViewModel)
         },
         bottomBar = {
             BottomNavigationBar(navController)

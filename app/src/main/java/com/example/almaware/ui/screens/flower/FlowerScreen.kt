@@ -51,18 +51,20 @@ import coil.compose.SubcomposeAsyncImage
 import com.example.almaware.R
 import com.example.almaware.ui.composables.AppBar
 import com.example.almaware.ui.composables.BottomNavigationBar
+import com.example.almaware.ui.screens.auth.AuthViewModel
 import com.example.almaware.ui.screens.sdg.VigaFontFamily
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FlowerScreen(
     navController: NavController,
-    viewModel: FlowerViewModel = koinViewModel()
+    viewModel: FlowerViewModel = koinViewModel(),
+    authViewModel: AuthViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
-        topBar = { AppBar("Prove", navController) },
+        topBar = { AppBar("Prove", navController, authViewModel) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
 

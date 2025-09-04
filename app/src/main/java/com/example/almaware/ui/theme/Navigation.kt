@@ -1,7 +1,6 @@
 package com.example.almaware.ui.theme
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -18,11 +17,10 @@ import com.example.almaware.ui.screens.flower.FlowerScreen
 import com.example.almaware.ui.screens.home.HomeScreen
 import com.example.almaware.ui.screens.profile.ProfileScreen
 import com.example.almaware.ui.screens.sdg.SdgScreen
-import com.example.almaware.ui.screens.sdg.badge.BadgeDetailScreen
+import com.example.almaware.ui.screens.sdg.student.badge.BadgeDetailScreen
 import com.example.almaware.ui.screens.sdg.student.StudentScreen
 import com.example.almaware.ui.screens.sdg.student.StudentViewModel
 import com.example.almaware.ui.screens.sdg.unibo.UniboScreen
-import com.example.almaware.ui.screens.sdg.unibo.UniboViewModel
 import com.example.almaware.ui.screens.sdg.unibo.clickable.ClickableSdgScreen
 import com.example.almaware.ui.screens.sdg.unibo.clickable.project.ProjectsScreen
 import com.example.almaware.ui.screens.splash.SplashScreen

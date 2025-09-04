@@ -11,6 +11,7 @@ import com.example.almaware.ui.screens.auth.AuthViewModel
 import com.example.almaware.ui.screens.flower.FlowerViewModel
 import com.example.almaware.ui.screens.sdg.SdgViewModel
 import com.example.almaware.ui.screens.sdg.student.StudentViewModel
+import com.example.almaware.ui.screens.sdg.student.badge.BadgeDetailViewModel
 import com.example.almaware.ui.screens.sdg.unibo.UniboViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -35,4 +36,5 @@ val appModule = module {
     viewModel { StudentViewModel(get(), get(), get()) }
     viewModel { AuthViewModel(get()) }
     viewModel { FlowerViewModel(get(), get()) }
+    viewModel { BadgeDetailViewModel(get(), get(), get()) }
 }

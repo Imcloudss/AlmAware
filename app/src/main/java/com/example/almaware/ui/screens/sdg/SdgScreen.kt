@@ -47,6 +47,7 @@ import com.example.almaware.data.model.HomeCard
 import com.example.almaware.data.model.SDG
 import com.example.almaware.ui.composables.AppBar
 import com.example.almaware.ui.composables.BottomNavigationBar
+import com.example.almaware.ui.screens.auth.AuthViewModel
 import com.google.firebase.storage.FirebaseStorage
 import org.koin.androidx.compose.koinViewModel
 
@@ -58,7 +59,8 @@ val VigaFontFamily = FontFamily(
 fun SdgScreen(
     navController: NavController,
     item: HomeCard,
-    viewModel: SdgViewModel = koinViewModel()
+    viewModel: SdgViewModel = koinViewModel(),
+    authViewModel: AuthViewModel = koinViewModel()
 ) {
     val sdg = viewModel.sdg.value
 
@@ -87,7 +89,7 @@ fun SdgScreen(
 
     Scaffold(
         topBar = {
-            AppBar("Prove", navController)
+            AppBar("Prove", navController, authViewModel)
         },
         bottomBar = {
             BottomNavigationBar(navController)

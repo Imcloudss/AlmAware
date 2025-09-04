@@ -5,6 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,6 +20,9 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
@@ -33,10 +40,15 @@ fun SignInScreen(
     navController: NavHostController,
     viewModel: AuthViewModel = koinViewModel()
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
+    var passwordVisible by remember { mutableStateOf(false) }
     val authState = viewModel.authState
+
+    // Cancella errori quando l'utente inizia a digitare
+    LaunchedEffect(viewModel.email, viewModel.password) {
+        if (authState is AuthState.Error) {
+            viewModel.clearError()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -90,8 +102,8 @@ fun SignInScreen(
 
             // Email
             OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
+                value = viewModel.email,
+                onValueChange = { viewModel.email = it },
                 label = { Text("Email") },
                 placeholder = {
                     Text(
@@ -106,21 +118,23 @@ fun SignInScreen(
                     .padding(horizontal = 25.dp)
                     .height(60.dp),
                 shape = RoundedCornerShape(60),
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color(0xFFF0EDE8),
-                    unfocusedIndicatorColor = Color(0xFFF0EDE8),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFFF0EDE8),
+                    unfocusedBorderColor = Color(0xFFF0EDE8),
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White
                 ),
-                singleLine = true
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                singleLine = true,
+                isError = authState is AuthState.Error
             )
 
-            Spacer(modifier = Modifier.fillMaxHeight(0.03f))
+            Spacer(modifier = Modifier.height(16.dp))
 
             // Password
             OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
+                value = viewModel.password,
+                onValueChange = { viewModel.password = it },
                 label = { Text("Password") },
                 placeholder = {
                     Text(
@@ -135,16 +149,41 @@ fun SignInScreen(
                     .padding(horizontal = 25.dp)
                     .height(60.dp),
                 shape = RoundedCornerShape(60),
-                colors = TextFieldDefaults.colors(
-                    focusedIndicatorColor = Color(0xFFF0EDE8),
-                    unfocusedIndicatorColor = Color(0xFFF0EDE8),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFFF0EDE8),
+                    unfocusedBorderColor = Color(0xFFF0EDE8),
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White
                 ),
-                singleLine = true
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(
+                            imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                            contentDescription = if (passwordVisible) "Hide password" else "Show password"
+                        )
+                    }
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                singleLine = true,
+                isError = authState is AuthState.Error
             )
 
-            Spacer(modifier = Modifier.fillMaxHeight(0.04f))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Mostra messaggio di errore
+            if (authState is AuthState.Error) {
+                Text(
+                    text = authState.message,
+                    color = Color.Red,
+                    fontSize = 14.sp,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(horizontal = 25.dp),
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
 
             Text(
                 text = buildAnnotatedString {
@@ -160,32 +199,39 @@ fun SignInScreen(
                     .align(Alignment.CenterHorizontally)
             )
 
-            Spacer(modifier = Modifier.fillMaxHeight(0.11f))
+            Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = {
-                    viewModel.email = email
-                    viewModel.password = password
-                    viewModel.signIn()
-                },
+                onClick = { viewModel.signIn() },
+                enabled = authState !is AuthState.Loading &&
+                        viewModel.email.isNotBlank() &&
+                        viewModel.password.isNotBlank(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(60.dp)
                     .padding(horizontal = 90.dp),
                 shape = RoundedCornerShape(30.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFD32F2F)
+                    containerColor = Color(0xFFD32F2F),
+                    disabledContainerColor = Color.Gray
                 )
             ) {
-                Text(
-                    text = "Sign in",
-                    fontSize = 25.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
+                if (authState is AuthState.Loading) {
+                    CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                } else {
+                    Text(
+                        text = "Sign in",
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.fillMaxHeight(0.05f))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = buildAnnotatedString {
@@ -210,28 +256,13 @@ fun SignInScreen(
                 color = Color.Gray,
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Stato autenticazione
-            when (authState) {
-                is AuthState.Loading -> {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-                }
-                is AuthState.Success -> {
-                    LaunchedEffect(Unit) {
-                        navController.navigate(AlmAwareRoute.Home) {
-                            popUpTo(AlmAwareRoute.SignIn) { inclusive = true }
-                        }
+            // Gestione navigazione su successo
+            LaunchedEffect(authState) {
+                if (authState is AuthState.Success) {
+                    navController.navigate(AlmAwareRoute.Home) {
+                        popUpTo(AlmAwareRoute.SignIn) { inclusive = true }
                     }
                 }
-                is AuthState.Error -> {
-                    Text(
-                        text = authState.message,
-                        color = Color.Red,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                }
-                else -> {}
             }
         }
     }

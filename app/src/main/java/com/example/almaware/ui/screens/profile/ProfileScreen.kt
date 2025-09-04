@@ -36,17 +36,21 @@ import androidx.navigation.NavController
 import com.example.almaware.R
 import com.example.almaware.ui.composables.AppBar
 import com.example.almaware.ui.composables.BottomNavigationBar
+import com.example.almaware.ui.screens.auth.AuthViewModel
 import com.example.almaware.ui.theme.AlmAwareRoute
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProfileScreen(
-    navController: NavController
+    navController: NavController,
+    authViewModel: AuthViewModel = koinViewModel()
 ) {
     Scaffold(
         topBar = {
             AppBar(
                 "Prove",
-                navController
+                navController,
+                authViewModel
             )
         },
         bottomBar = {

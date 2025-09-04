@@ -1,6 +1,7 @@
 package com.example.almaware.data.repository
 
 import com.example.almaware.data.model.User
+import com.example.almaware.data.model.Pot
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -23,9 +24,12 @@ class AuthRepository(
                         return@addOnCompleteListener
                     }
 
+                    // Crea nuovo utente con progresso badge inizializzato
                     val newUser = User(
                         username = username,
                         email = email,
+                        badgeProgress = List(15) { 0 }, // 15 badge inizializzati a 0
+                        pot = Pot() // Pot di default
                     )
 
                     db.child("users").child(uid).setValue(newUser)
@@ -79,19 +83,49 @@ class AuthRepository(
     }
 
     // --- GET CURRENT USER ---
-    fun getCurrentUser(onResult: (user: User?) -> Unit) {
+    suspend fun getCurrentUser(): User? = suspendCancellableCoroutine { cont ->
         val uid = auth.currentUser?.uid
         if (uid != null) {
             db.child("users").child(uid).get()
                 .addOnSuccessListener { snapshot ->
                     val user = snapshot.getValue(User::class.java)
-                    onResult(user)
+                    cont.resume(user)
                 }
-                .addOnFailureListener {
-                    onResult(null)
+                .addOnFailureListener { e ->
+                    cont.resumeWithException(e)
                 }
         } else {
-            onResult(null)
+            cont.resume(null)
         }
+    }
+
+    // --- GET CURRENT USER ID ---
+    fun getCurrentUserId(): String? = auth.currentUser?.uid
+
+    // --- IS USER LOGGED IN ---
+    fun isUserLoggedIn(): Boolean = auth.currentUser != null
+
+    // --- UPDATE USER PROFILE ---
+    suspend fun updateUserProfile(uid: String, username: String): User = suspendCancellableCoroutine { cont ->
+        db.child("users").child(uid).get()
+            .addOnSuccessListener { snapshot ->
+                val currentUser = snapshot.getValue(User::class.java)
+                if (currentUser != null) {
+                    val updatedUser = currentUser.copy(username = username)
+
+                    db.child("users").child(uid).setValue(updatedUser)
+                        .addOnSuccessListener {
+                            cont.resume(updatedUser)
+                        }
+                        .addOnFailureListener { e ->
+                            cont.resumeWithException(e)
+                        }
+                } else {
+                    cont.resumeWithException(Exception("User data not found"))
+                }
+            }
+            .addOnFailureListener { e ->
+                cont.resumeWithException(e)
+            }
     }
 }

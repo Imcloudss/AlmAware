@@ -30,13 +30,16 @@ import androidx.navigation.NavController
 import com.example.almaware.data.model.HomeCard
 import com.example.almaware.ui.composables.AppBar
 import com.example.almaware.ui.composables.BottomNavigationBar
+import com.example.almaware.ui.screens.auth.AuthViewModel
 import com.example.almaware.ui.screens.home.data.backgrounds
 import com.example.almaware.ui.screens.home.data.borderColors
 import com.example.almaware.ui.screens.home.data.cardOverlays
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    authViewModel: AuthViewModel = koinViewModel()
 ) {
     val items = (0 until 17).map { index ->
         HomeCard(
@@ -52,7 +55,8 @@ fun HomeScreen(
         topBar = {
             AppBar(
                 "Prove",
-                navController
+                navController,
+                authViewModel
             )
         },
         bottomBar = {

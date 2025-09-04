@@ -44,7 +44,9 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.almaware.R
 import com.example.almaware.ui.composables.AppBar
+import com.example.almaware.ui.composables.BadgeInfoPopup
 import com.example.almaware.ui.composables.BottomNavigationBar
+import com.example.almaware.ui.screens.auth.AuthViewModel
 import com.example.almaware.ui.screens.sdg.VigaFontFamily
 import com.example.almaware.ui.screens.sdg.student.StudentViewModel
 import com.example.almaware.ui.screens.sdg.student.BadgeWithUserStatus
@@ -53,13 +55,15 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun AwardsScreen(
     navController: NavController,
-    viewModel: StudentViewModel = koinViewModel()
+    viewModel: StudentViewModel = koinViewModel(),
+    authViewModel: AuthViewModel = koinViewModel()
 ) {
     var showDropdown by remember { mutableStateOf(false) }
+    var showBadgeInfo by remember { mutableStateOf(false) }
+    var selectedBadge by remember { mutableStateOf<BadgeWithUserStatus?>(null) }
 
     val filteredBadges by viewModel.filteredBadges.collectAsState()
     val currentFilter by viewModel.currentFilter.collectAsState()
-    val allBadges by viewModel.badges.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.loadBadges()
@@ -67,7 +71,8 @@ fun AwardsScreen(
 
     Scaffold(
         topBar = {
-            AppBar("Prove", navController)
+            AppBar(
+                "Prove", navController, authViewModel)
         },
         bottomBar = {
             BottomNavigationBar(navController)
@@ -220,18 +225,12 @@ fun AwardsScreen(
                 ) {
                     items(filteredBadges.size) { index ->
                         val badgeWithStatus = filteredBadges[index]
-                        // Calcola l'indice originale del badge nella lista completa
-                        val originalIndex = allBadges.indexOf(badgeWithStatus.badge)
 
                         BadgeItem(
                             badgeWithStatus = badgeWithStatus,
                             onClick = {
-                                // Gestisci click sul badge - puoi navigare o mostrare dettagli
-                                println("Clicked badge: ${badgeWithStatus.badge.badgeName}")
-                                // Opzionalmente, puoi anche toggleare lo stato qui:
-//                                if (originalIndex >= 0) {
-//                                    viewModel.toggleBadgeCompletion(originalIndex)
-//                                }
+                                selectedBadge = badgeWithStatus
+                                showBadgeInfo = true
                             }
                         )
                     }
@@ -249,6 +248,18 @@ fun AwardsScreen(
             }
         }
     }
+
+    if (showBadgeInfo && selectedBadge != null) {
+        BadgeInfoPopup(
+            badgeImageUrl = if (selectedBadge!!.isCompleted) selectedBadge!!.badge.validate else selectedBadge!!.badge.unvalidate,
+            badgeName = selectedBadge!!.badge.badgeName,
+            isCompleted = selectedBadge!!.isCompleted,
+            onDismiss = {
+                showBadgeInfo = false
+                selectedBadge = null
+            }
+        )
+    }
 }
 
 @Composable
@@ -264,7 +275,6 @@ fun BadgeItem(
         contentAlignment = Alignment.Center
     ) {
         val badge = badgeWithStatus.badge
-        // Usa lo stato reale dell'utente invece del campo checkbox del badge
         val imageUrl = if (badgeWithStatus.isCompleted) badge.validate else badge.unvalidate
 
         AsyncImage(

@@ -41,6 +41,7 @@ import com.example.almaware.data.model.HomeCard
 import com.example.almaware.ui.composables.AppBar
 import com.example.almaware.ui.composables.BottomNavigationBar
 import com.example.almaware.ui.composables.ComposeBubble
+import com.example.almaware.ui.screens.auth.AuthViewModel
 import com.example.almaware.ui.screens.sdg.VigaFontFamily
 import com.example.almaware.ui.screens.sdg.unibo.UniboViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -51,7 +52,8 @@ fun ProjectsScreen(
     navController: NavController,
     item: HomeCard,
     projectId: Int,
-    uniboViewModel: UniboViewModel = koinViewModel()
+    uniboViewModel: UniboViewModel = koinViewModel(),
+    authViewModel: AuthViewModel = koinViewModel()
 ) {
     val projects by uniboViewModel.projects.collectAsState()
     LaunchedEffect(Unit) {
@@ -60,7 +62,7 @@ fun ProjectsScreen(
     val clickedProject = projects.find { it.id == projectId }
 
     Scaffold(
-        topBar = { AppBar("Prove", navController) },
+        topBar = { AppBar("Prove", navController, authViewModel) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         Box(

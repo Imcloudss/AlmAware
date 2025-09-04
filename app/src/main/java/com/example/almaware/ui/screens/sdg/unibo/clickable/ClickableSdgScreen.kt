@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import com.example.almaware.data.model.HomeCard
 import com.example.almaware.ui.composables.AppBar
 import com.example.almaware.ui.composables.ComposeBubble
+import com.example.almaware.ui.screens.auth.AuthViewModel
 import com.example.almaware.ui.screens.sdg.VigaFontFamily
 import com.example.almaware.ui.screens.sdg.unibo.UniboViewModel
 import com.example.almaware.utils.caption
@@ -42,7 +43,8 @@ fun ClickableSdgScreen(
     item: HomeCard,
     string: String,
     value: Int,
-    uniboViewModel: UniboViewModel = koinViewModel()
+    uniboViewModel: UniboViewModel = koinViewModel(),
+    authViewModel: AuthViewModel = koinViewModel()
 ) {
     val projects by uniboViewModel.projects.collectAsState()
     LaunchedEffect(Unit) {
@@ -55,7 +57,8 @@ fun ClickableSdgScreen(
         topBar = {
             AppBar(
                 "Prove",
-                navController
+                navController,
+                authViewModel
             )
         }
     ) { innerPadding ->

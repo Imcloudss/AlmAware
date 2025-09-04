@@ -48,6 +48,7 @@ import com.example.almaware.data.model.HomeCard
 import com.example.almaware.ui.composables.AppBar
 import com.example.almaware.ui.composables.BottomNavigationBar
 import com.example.almaware.ui.composables.getIconForType
+import com.example.almaware.ui.screens.auth.AuthViewModel
 import com.example.almaware.ui.screens.sdg.SdgViewModel
 import com.example.almaware.ui.screens.sdg.VigaFontFamily
 import com.example.almaware.utils.getDrawableForSdg
@@ -58,7 +59,8 @@ fun StudentScreen(
     navController: NavController,
     item: HomeCard,
     sdgViewModel: SdgViewModel = koinViewModel(),
-    badgeViewModel: StudentViewModel = koinViewModel()
+    badgeViewModel: StudentViewModel = koinViewModel(),
+    authViewModel: AuthViewModel = koinViewModel()
 ) {
     // Carica SDG e tutti i badge al primo avvio
     LaunchedEffect(Unit) {
@@ -78,7 +80,7 @@ fun StudentScreen(
     }
 
     Scaffold(
-        topBar = { AppBar("Prove", navController) },
+        topBar = { AppBar("Prove", navController, authViewModel) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { contentPadding ->
         Box(
