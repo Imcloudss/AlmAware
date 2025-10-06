@@ -53,7 +53,6 @@ fun SignUpScreen(
     navController: NavHostController,
     viewModel: AuthViewModel = koinViewModel()
 ) {
-    var acceptPolicies by remember { mutableStateOf(false) }
     var confirmPassword by remember { mutableStateOf("") }
 
     val authState = viewModel.authState
@@ -211,8 +210,8 @@ fun SignUpScreen(
                     .padding(horizontal = 35.dp)
             ) {
                 Checkbox(
-                    checked = acceptPolicies,
-                    onCheckedChange = { acceptPolicies = it },
+                    checked = viewModel.acceptPolicies,
+                    onCheckedChange = { viewModel.acceptPolicies = it },
                     colors = CheckboxDefaults.colors(
                         checkedColor = Color(0xFFD32F2F),
                         uncheckedColor = Color.Gray
@@ -239,7 +238,7 @@ fun SignUpScreen(
             // SIGN UP button
             Button(
                 onClick = {
-                    if (acceptPolicies && viewModel.password == confirmPassword) {
+                    if (viewModel.acceptPolicies && viewModel.password == confirmPassword) {
                         viewModel.signUp()
                     }
                 },

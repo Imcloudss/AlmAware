@@ -16,7 +16,7 @@ class AuthViewModel(
     var email by mutableStateOf("")
     var password by mutableStateOf("")
     var name by mutableStateOf("")
-    private var acceptPolicies by mutableStateOf(false)
+    var acceptPolicies by mutableStateOf(false)
 
     var authState by mutableStateOf<AuthState>(AuthState.Idle)
     private var currentUser by mutableStateOf<User?>(null)
