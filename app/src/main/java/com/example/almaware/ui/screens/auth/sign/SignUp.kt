@@ -19,6 +19,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -163,6 +164,7 @@ fun SignUpScreen(
                 value = viewModel.password,
                 onValueChange = { viewModel.password = it },
                 label = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
                 placeholder = { Text("Password", fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color.Gray) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -185,6 +187,7 @@ fun SignUpScreen(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
                 label = { Text("Confirm password") },
+                visualTransformation = PasswordVisualTransformation(),
                 placeholder = { Text("Confirm password", fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color.Gray) },
                 modifier = Modifier
                     .fillMaxWidth()
